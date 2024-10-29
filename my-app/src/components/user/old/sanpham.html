@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản Phẩm - Phòng Khám Nha Khoa</title>
+    <link rel="icon" href="images/favicon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="images/logo.png" alt="Phòng Khám Nha Khoa Logo">
+            </a>            
+        </div>
+        <nav class="main-menu">
+            <ul>
+                <li class="dropdown">
+                    <a href="#">Dịch vụ &#9662;</a>
+                    <ul class="dropdown-content">
+                        <li><a href="niengrang.html">Niềng Răng</a></li>
+                        <li><a href="#">Trồng răng Implant</a></li>
+                        <li><a href="#">Răng sứ thẩm mỹ</a></li>
+                        <li><a href="#">Nha khoa tổng quát</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Bảng giá &#9662;</a>
+                    <ul class="dropdown-content">
+                        <li><a href="sanpham.html">Sản phẩm</a></li>
+                        <li><a href="Banggia.html">Bảng giá chi tiết các dịch vụ</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Thông tin khách hàng</a>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Kiến thức nha khoa &#9662;</a>
+                    <ul class="dropdown-content">
+                        <li><a href="#">Kiến thức niềng răng</a></li>
+                        <li><a href="#">Kiến thức cấy ghép</a></li>
+                    </ul>
+                </li>
+                <li><a href="giohang.html">Giỏ hàng</a></li>
+                <li><a href="login.html">Đăng nhập</a></li>
+                <li><a href="register.html">Đăng ký</a></li>
+            </ul>
+        </nav>      
+    </header>
+
+    <section id="products">
+        <h2>Sản phẩm của chúng tôi</h2>
+            <div class="product-list">
+                <!-- Sản phẩm 1 -->
+                <div class="product-item">
+                    <img src="https://cf.shopee.vn/file/sg-11134201-22110-ehiw2w9aumjvf9" alt="Máy cạo vôi răng">
+                    <h3>Máy cạo vôi răng</h3>
+                    <p>Máy cạo vôi răng tiên tiến, giúp làm sạch răng hiệu quả.</p>
+                    <p>Giá: 1,200,000 VNĐ</p>
+                    <input type="number" class="quantity" value="1" min="1" />
+                    <button onclick="addToCart('Máy cạo vôi răng', 1200000, 'https://cf.shopee.vn/file/sg-11134201-22110-ehiw2w9aumjvf9')">Mua ngay</button>
+                </div>
+
+                <!-- Sản phẩm 2 -->
+                <div class="product-item">
+                    <img src="https://pazoda.com/wp-content/uploads/2022/03/Ban-chai-dien-Oral-B-Vitality-Extra-sensitive-600x600.jpg" alt="Bàn chải điện">
+                    <h3>Bàn chải điện</h3>
+                    <p>Bàn chải điện với chế độ rung giúp vệ sinh răng miệng tối ưu.</p>
+                    <p>Giá: 800,000 VNĐ</p>
+                    <input type="number" class="quantity" value="1" min="1" />
+                    <button onclick="addToCart('Bàn chải điện', 800000, 'https://pazoda.com/wp-content/uploads/2022/03/Ban-chai-dien-Oral-B-Vitality-Extra-sensitive-600x600.jpg')">Mua ngay</button>
+                </div>
+
+                <!-- Sản phẩm 3 -->
+                <div class="product-item">
+                    <img src="https://alltop.vn/backend/media/images/posts/695/Chi_Nha_Khoa_Oral-B_Cho_Nuou_Nhay_Cam_Dental_Floss_Satin-100202.jpg" alt="Chỉ nha khoa">
+                    <h3>Chỉ nha khoa</h3>
+                    <p>Chỉ nha khoa loại mềm, phù hợp cho mọi đối tượng sử dụng.</p>
+                    <p>Giá: 50,000 VNĐ</p>
+                    <input type="number" class="quantity" value="1" min="1" />
+                    <button onclick="addToCart('Chỉ nha khoa', 50000, 'https://alltop.vn/backend/media/images/posts/695/Chi_Nha_Khoa_Oral-B_Cho_Nuou_Nhay_Cam_Dental_Floss_Satin-100202.jpg')">Mua ngay</button>
+                </div>
+
+                <!-- Sản phẩm 4 -->
+                <div class="product-item">
+                    <img src="https://thammyhanquoc.vn/wp-content/uploads/2023/04/mach-ban-cach-ve-sinh-khay-nieng-rang-trong-suot-2.jpg" alt="Khay niềng răng thông minh">
+                    <h3>Khay niềng răng thông minh</h3>
+                    <p>Khay niềng răng trong suốt, thiết kế ôm sát và thoải mái.</p>
+                    <p>Giá: 3,500,000 VNĐ</p>
+                    <input type="number" class="quantity" value="1" min="1" />
+                    <button onclick="addToCart('Khay niềng răng thông minh', 3500000, 'https://thammyhanquoc.vn/wp-content/uploads/2023/04/mach-ban-cach-ve-sinh-khay-nieng-rang-trong-suot-2.jpg')">Mua ngay</button>
+                </div>
+
+            </div>
+    </section>
+    
+    <footer>
+        <p>&copy; 2024 Phòng Khám Nha Khoa. All rights reserved.</p>
+    </footer>
+    <script type="text/javascript" src="https://cdn.fchat.vn/assets/embed/webchat.js?id=66f6418bb8486d35ca68dfc2" async="async"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - Phòng Khám Nha Khoa</title>
+    <link rel="icon" href="images/favicon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="images/logo.png" alt="Phòng Khám Nha Khoa Logo">
+            </a>            
+        </div>
+        <nav class="main-menu">
+            <ul>
+                <li class="dropdown">
+                    <a href="#">Dịch vụ &#9662;</a>
+                    <ul class="dropdown-content">
+                        <li><a href="niengrang.html">Niềng Răng</a></li>
+                        <li><a href="#">Trồng răng Implant</a></li>
+                        <li><a href="#">Răng sứ thẩm mỹ</a></li>
+                        <li><a href="#">Nha khoa tổng quát</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Bảng giá &#9662;</a>
+                    <ul class="dropdown-content">
+                        <li><a href="sanpham.html">Sản phẩm</a></li>
+                        <li><a href="Banggia.html">Bảng giá chi tiết các dịch vụ</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Thông tin khách hàng</a>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Kiến thức nha khoa &#9662;</a>
+                    <ul class="dropdown-content">
+                        <li><a href="#">Kiến thức niềng răng</a></li>
+                        <li><a href="#">Kiến thức cấy ghép</a></li>
+                    </ul>
+                </li>
+                <li><a href="giohang.html">Giỏ hàng</a></li>
+                <li><a href="login.html">Đăng nhập</a></li>
+                <li><a href="register.html">Đăng ký</a></li>
+            </ul>
+        </nav>      
+    </header>
+
+    <section id="payment">
+        <h2>Thông tin thanh toán</h2>
+
+        <div class="payment-method">
+            <h3>Thanh toán trực tuyến</h3>
+            <form id="online-payment-form">
+                <label for="card-number">Số thẻ:</label>
+                <input type="text" id="card-number" required>
+                
+                <label for="card-name">Tên chủ thẻ:</label>
+                <input type="text" id="card-name" required>
+
+                <label for="expiry-date">Ngày hết hạn:</label>
+                <input type="text" id="expiry-date" placeholder="MM/YY" required>
+
+                <label for="cvv">CVV:</label>
+                <input type="text" id="cvv" required>
+
+                <button type="submit">Thanh toán</button>
+            </form>
+        </div>
+
+        <div class="payment-method">
+            <button class="pay-in-clinic-btn" onclick="alert('Bạn đã chọn thanh toán tại phòng khám. Quý khách có thể thanh toán trực tiếp tại phòng khám khi đến lấy sản phẩm hoặc nhận dịch vụ.');">Thanh Toán tại Phòng Khám</button>
+            <button onclick="redirectToCart()">Trở về giỏ hàng</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Phòng Khám Nha Khoa. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script> <!-- Kết nối đến file JavaScript -->
+</body>
+</html>

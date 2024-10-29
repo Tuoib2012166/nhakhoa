@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ Hàng - Phòng Khám Nha Khoa</title>
+    <link rel="icon" href="images/favicon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="images/logo.png" alt="Phòng Khám Nha Khoa Logo">
+            </a>            
+        </div>
+        <nav class="main-menu">
+            <ul>
+                <li class="dropdown">
+                    <a href="#">Dịch vụ &#9662;</a>
+                    <ul class="dropdown-content">
+                        <li><a href="niengrang.html">Niềng Răng</a></li>
+                        <li><a href="#">Trồng răng Implant</a></li>
+                        <li><a href="#">Răng sứ thẩm mỹ</a></li>
+                        <li><a href="#">Nha khoa tổng quát</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Bảng giá &#9662;</a>
+                    <ul class="dropdown-content">
+                        <li><a href="sanpham.html">Sản phẩm</a></li>
+                        <li><a href="Banggia.html">Bảng giá chi tiết các dịch vụ</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Thông tin khách hàng</a>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Kiến thức nha khoa &#9662;</a>
+                    <ul class="dropdown-content">
+                        <li><a href="#">Kiến thức niềng răng</a></li>
+                        <li><a href="#">Kiến thức cấy ghép</a></li>
+                    </ul>
+                </li>
+                <li><a href="giohang.html">Giỏ hàng</a></li>
+                <li><a href="login.html">Đăng nhập</a></li>
+                <li><a href="register.html">Đăng ký</a></li>
+            </ul>
+        </nav>      
+    </header>
+
+    <section id="cart">
+        <h2>Giỏ Hàng của Bạn</h2>
+
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Hình ảnh</th> <!-- Cột hình ảnh mới -->
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Tổng cộng</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items">
+                <!-- Các sản phẩm sẽ được thêm vào đây từ localStorage -->
+            </tbody>
+        </table>
+
+        <div class="cart-summary" style="text-align: center;">
+            <h3>Tổng cộng:</h3>
+            <p id="total-price">0 VNĐ</p>
+            <button class="checkout-btn" onclick="window.location.href='thanhtoan.html'">Thanh Toán</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Phòng Khám Nha Khoa. All rights reserved.</p>
+    </footer>
+    <script type="text/javascript" src="https://cdn.fchat.vn/assets/embed/webchat.js?id=66f6418bb8486d35ca68dfc2" async="async"></script>
+    <script src="script.js"></script>
+    <script>
+        // Hàm để hiển thị sản phẩm trong giỏ hàng
+        function displayCart() {
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartTable = document.getElementById('cart-items');
+            const totalPriceElement = document.getElementById('total-price');
+            let totalPrice = 0;
+
+            cartItems.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><img src="${item.image}" alt="${item.name}" style="width: 100px; height: auto;"></td> <!-- Cột hình ảnh -->
+                    <td>
+                        <div class="product-info">
+                            <p>${item.name}</p>
+                        </div>
+                    </td>
+                    <td>${item.quantity}</td>
+                    <td>${item.price.toLocaleString()} VNĐ</td>
+                    <td>${item.total.toLocaleString()} VNĐ</td>
+                    <td>
+                        <button class="remove-btn" onclick="removeItem('${item.name}')">Xóa</button>
+                    </td>
+                `;
+                cartTable.appendChild(row);
+                totalPrice += item.total;
+            });
+
+            totalPriceElement.innerHTML = totalPrice.toLocaleString() + ' VNĐ';
+        }
+
+        // Hàm để xóa sản phẩm khỏi giỏ hàng
+        function removeItem(productName) {
+            let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItems = cartItems.filter(item => item.name !== productName);
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            location.reload(); // Tải lại trang để cập nhật giỏ hàng
+        }
+
+        // Gọi hàm để hiển thị giỏ hàng khi trang được tải
+        displayCart();
+    </script>
+</body>
+</html>

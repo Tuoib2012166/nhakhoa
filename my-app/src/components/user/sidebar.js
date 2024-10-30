@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from 'react';
+import { Carousel } from 'antd';
 import '../../assets/css/sidebar.css';
 
 const Sidebar = () => {
+    const carouselRef = useRef(null);
+    const [autoplayInterval, setAutoplayInterval] = useState(5000); 
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            carouselRef.current.next();
+        }, autoplayInterval);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [autoplayInterval]);
+
     return (
         <div className="sidebar">
             <div className="sidebar-section">
@@ -21,7 +35,23 @@ const Sidebar = () => {
             </div>
             <div className="sidebar-section">
                 <h3>Thông Tin Ưu Đãi</h3>
-                <img src="img/doctor/doctor1.png" alt="Thông tin ưu đãi" className="sidebar-image" />
+                <Carousel
+                    ref={carouselRef}
+                    autoplay={false}
+                    dotPosition="bottom"
+                    effect="fade"
+                    speed={1500}
+                >
+                    <div>
+                        <img src="./img/sidebar/sale1.jpg" alt="banner cua trang chu" style={{ width: "100%", height: "100%" }} />
+                    </div>
+                    <div>
+                        <img src="./img/sidebar/sale2.jpg" alt="banner cua trang chu" style={{ width: "100%", height: "100%" }} />
+                    </div>
+                    <div>
+                        <img src='./img/sidebar/sale3.jpg' alt="banner cua trang chu" style={{ width: "100%", height: "100%" }} />
+                    </div>
+                </Carousel>
             </div>
             <div className="sidebar-section">
                 <h3>Nha Khoa Hiện Đại</h3>

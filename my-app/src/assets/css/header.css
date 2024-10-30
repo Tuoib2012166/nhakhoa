@@ -5,11 +5,29 @@ header {
     background-color: #ffffff;
     padding: 20px;
     border: 1px solid #0a74da;
+    position: fixed;
+    /* Giữ header cố định */
+    top: 0;
+    /* Nằm ở trên cùng */
+    left: 0;
+    /* Nằm bên trái */
+    right: 0;
+    /* Nằm bên phải */
+    z-index: 1000;
+    /* Để header nằm trên các phần tử khác */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Hiệu ứng bóng */
+}
+
+body {
+    margin: 0;
+    /* Đặt lại margin của body */
+    padding-top: 80px;
+    /* Đảm bảo nội dung không bị che khuất bởi header */
 }
 
 header .logo img {
     width: 200px;
-    ;
 }
 
 nav ul {
@@ -60,7 +78,7 @@ nav ul li a {
     position: absolute;
     background-color: white;
     min-width: 200px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 

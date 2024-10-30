@@ -4,7 +4,6 @@ import Header from './header';
 import Banner from './banner';
 import MainContent from './mainContent';
 import Footer from './footer';
-import Chatbot from './chatbot';
 
 function Homepage() {
   return (

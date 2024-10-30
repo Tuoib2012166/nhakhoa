@@ -37,9 +37,11 @@
 
 #login input {
     padding: 10px;
+    width: 380px;
     margin-bottom: 20px;
     border: none;
     border-radius: 5px;
+    background-color: #e7e7e7;
 }
 
 #login button {
@@ -66,4 +68,16 @@
 
 #login a:hover {
     text-decoration: underline;
+}
+#birthYear {
+    width: 200px;
+    /* Điều chỉnh chiều rộng tại đây */
+    padding: 5px;
+    /* Khoảng cách bên trong */
+    font-size: 16px;
+    /* Kích thước chữ */
+    border: 1px solid #ccc;
+    /* Đường viền */
+    border-radius: 4px;
+    /* Bo tròn các góc */
 }

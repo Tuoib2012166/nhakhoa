@@ -31,7 +31,7 @@ function Register() {
         <img src="img/logo.png" alt="Logo" />
       </div>
       <h2>Đăng ký tài khoản</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} action="reg.php" method="post">
         <label htmlFor="name">Họ và tên:</label>
         <input
           type="text"

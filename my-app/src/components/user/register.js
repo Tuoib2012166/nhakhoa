@@ -3,14 +3,18 @@ import Header from './header';
 import Footer from './footer';
 import '../../assets/css/login.css';
 
-
 function Register() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    address: '',
+    gender: '',
+    birthYear: '',
     password: '',
     confirmPassword: ''
   });
+  const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false); // Để xác định loại thông báo
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,19 +23,47 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Logic xử lý đăng ký
-    console.log('Đăng ký với dữ liệu:', formData);
+
+    // Gửi yêu cầu đăng ký đến server
+    fetch('http://localhost:8080/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        setMessage(data); // Cập nhật thông báo
+        setIsSuccess(data === 'Đăng ký thành công'); // Xác định thông báo thành công hay thất bại
+        setTimeout(() => {
+          setMessage(''); // Tắt thông báo sau 1 giây
+        }, 3000);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setMessage('Có lỗi xảy ra. Vui lòng thử lại.');
+        setIsSuccess(false);
+        setTimeout(() => {
+          setMessage(''); // Tắt thông báo sau 1 giây
+        }, 3000);
+      });
   };
 
   return (
     <>
-    <Header/>
+      <Header />
       <section id="login">
         <div className="logo-container">
           <img src="img/logo.png" alt="Logo" />
         </div>
         <h2>Đăng ký tài khoản</h2>
-        <form onSubmit={handleSubmit} action="reg.php" method="post">
+        {message && (
+          <div className={`message-box ${isSuccess ? 'success' : 'error'}`}>
+            {message}
+          </div>
+        )} {/* Hiển thị thông báo */}
+        <form onSubmit={handleSubmit}>
           <label htmlFor="name">Họ và tên:</label>
           <input
             type="text"
@@ -68,11 +100,11 @@ function Register() {
           <label>Giới tính:</label>
           <div className="gender-options">
             <label className="gender-option">
-              <input type="radio" name="gender" value="male" />
+              <input type="radio" name="gender" value="male" onChange={handleChange} />
               <span className="custom-radio"></span> Nam
             </label>
             <label className="gender-option">
-              <input type="radio" name="gender" value="female" />
+              <input type="radio" name="gender" value="female" onChange={handleChange} />
               <span className="custom-radio"></span> Nữ
             </label>
           </div>
@@ -110,12 +142,13 @@ function Register() {
             onChange={handleChange}
           />
 
-          <button type="submit" name="btn-reg">Đăng ký</button>
+          <button type="submit">Đăng ký</button>
         </form>
-        <p>Bạn đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+        <p className="redirect">
+          Đã có tài khoản? <a href="/login">Đăng nhập ngay</a>
+        </p>
       </section>
-
-    <Footer />
+      <Footer />
     </>
   );
 }

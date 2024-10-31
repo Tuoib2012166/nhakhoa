@@ -4,6 +4,7 @@ import Header from './header';
 import Banner from './banner';
 import MainContent from './mainContent';
 import Footer from './footer';
+import QuickActions from './quickActions';
 
 function Homepage() {
   return (
@@ -11,6 +12,7 @@ function Homepage() {
         <Header />
         <Banner/>
         <MainContent/>
+        <QuickActions/>
         <Footer />
       </div>
   

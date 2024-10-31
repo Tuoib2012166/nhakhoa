@@ -12,6 +12,7 @@ import TopScroll from './components/user/topScroll';
 import QuickActions from './components/user/quickActions';
 import News from './components/user/news';
 import NewsImplant from './components/user/newsImplant';
+import Admin from './components/admin/admin';
 
 
 function App() {
@@ -35,8 +36,8 @@ function App() {
           <Route path="/priceList" element={<Pricelist />} />
           <Route path="/news" element={<News />} />
           <Route path="/newsImplant" element={<NewsImplant />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
-        <QuickActions/>
         <TopScroll />
       </div>
     </Router>

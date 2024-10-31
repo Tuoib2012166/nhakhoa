@@ -1,7 +1,7 @@
 .top-scroll {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: 100px; /* Giảm giá trị để di chuyển nút sang trái */
     width: 40px;
     height: 40px;
     background-color: #007bff;

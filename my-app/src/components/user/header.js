@@ -33,11 +33,11 @@ function Header() {
           <li className="dropdown">
             <a href="#">Kiến thức nha khoa &#9662;</a>
             <ul className="dropdown-content">
-              <li><Link to="/kien-thuc-nieng-rang">Kiến thức niềng răng</Link></li>
-              <li><Link to="/kien-thuc-cay-ghep">Kiến thức cấy ghép</Link></li>
+              <li><Link to="/news">Kiến thức niềng răng</Link></li>
+              <li><Link to="/newsImplant">Kiến thức cấy ghép Implant</Link></li>
             </ul>
           </li>
-          <li><Link to="/gio-hang">Giỏ hàng</Link></li>
+          <li><Link to="/admin">Admin</Link></li>
           <li><Link to="/login">Đăng nhập</Link></li>
           <li><Link to="/register">Đăng ký</Link></li>
         </ul>

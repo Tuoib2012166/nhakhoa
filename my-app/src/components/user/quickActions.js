@@ -13,17 +13,22 @@ const QuickActions = () => {
     setIsFormVisible(false); // Ẩn form khi nhấn nút đóng
   };
 
+  const handleOverlayClick = (e) => {
+    // Kiểm tra nếu người dùng nhấp vào lớp phủ bên ngoài form
+    if (e.target.classList.contains('form-overlay')) {
+      handleCloseForm();
+    }
+  };
+
   return (
     <div className="fixed-panel">
       <button className="appointment-button" onClick={handleAppointmentClick}>
         <i className="fas fa-calendar-alt"></i>
       </button>
-      <button className="message-button">
-        <i className="fas fa-comment"></i>
-      </button>
+      <div></div>
 
       {isFormVisible && (
-        <div className="form-overlay"> {/* Phần nền đen phía sau form */}
+        <div className="form-overlay" onClick={handleOverlayClick}> {/* Phần nền đen phía sau form */}
           <div className="form-popup"> {/* Form nổi */}
             <button className="close-button" onClick={handleCloseForm}>
               &times; {/* Dấu x để đóng form */}

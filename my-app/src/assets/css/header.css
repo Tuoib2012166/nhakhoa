@@ -5,8 +5,7 @@ header {
     background-color: #ffffff;
     padding: 20px;
     border: 1px solid #0a74da;
-    position: fixed;
-    /* Giữ header cố định */
+    
     top: 0;
     /* Nằm ở trên cùng */
     left: 0;
@@ -22,8 +21,6 @@ header {
 body {
     margin: 0;
     /* Đặt lại margin của body */
-    padding-top: 80px;
-    /* Đảm bảo nội dung không bị che khuất bởi header */
 }
 
 header .logo img {

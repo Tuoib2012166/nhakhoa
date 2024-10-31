@@ -1,34 +1,30 @@
 .fixed-panel {
     position: fixed;
     bottom: 100px;
-    /* Đưa các nút lên cao hơn */
     right: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
+
 .appointment-button,
 .message-button {
     background-color: #0a74da;
     color: white;
     border: none;
     border-radius: 50%;
-    width: 50px;
-    /* Điều chỉnh chiều rộng của nút */
-    height: 50px;
-    /* Điều chỉnh chiều cao của nút */
+    width: 45px; /* Giảm kích thước nút */
+    height: 45px; /* Giảm kích thước nút */
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     padding: 0;
-    /* Bỏ padding để phù hợp với kích thước biểu tượng */
 }
 
 .appointment-button i,
 .message-button i {
-    font-size: 24px;
-    /* Tăng kích thước biểu tượng nếu cần */
+    font-size: 20px; /* Giảm kích thước biểu tượng */
 }
 
 .form-overlay {
@@ -45,21 +41,21 @@
 
 .form-popup {
     background-color: #f4f4f4;
-    padding: 10px; /* Giảm padding để giảm chiều cao */
+    padding: 8px; /* Giảm padding để giảm chiều cao */
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
     position: relative;
-    width: 500px; /* Giữ chiều rộng */
+    width: 400px; /* Giảm chiều rộng của form */
     max-width: 80%; /* Đảm bảo form không vượt quá chiều rộng màn hình */
     height: auto; /* Đặt chiều cao tự động để phù hợp với nội dung */
 }
 
 .close-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 16px; /* Tăng giá trị này để nút xuống thấp hơn */
+    right: 8px;
     background: transparent;
     border: none;
-    font-size: 24px;
+    font-size: 20px; /* Giảm kích thước nút đóng */
     cursor: pointer;
 }

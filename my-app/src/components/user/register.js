@@ -5,10 +5,11 @@ import '../../assets/css/login.css';
 
 function Register() {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
+    fullname: '',
     phone: '',
     address: '',
-    gender: '',
+    gender: 1,
     birthYear: '',
     password: '',
     confirmPassword: ''
@@ -35,7 +36,7 @@ function Register() {
       .then(response => response.json())
       .then(data => {
         setMessage(data); // Cập nhật thông báo
-        setIsSuccess(data === 'Đăng ký thành công'); // Xác định thông báo thành công hay thất bại
+        setIsSuccess(true); // Xác định thông báo thành công hay thất bại
         setTimeout(() => {
           setMessage(''); // Tắt thông báo sau 1 giây
         }, 3000);
@@ -64,14 +65,25 @@ function Register() {
           </div>
         )} {/* Hiển thị thông báo */}
         <form onSubmit={handleSubmit}>
+          <label htmlFor="name">Tài khoản:</label>
+          <input
+            type="text"
+            id="name"
+            name="username"
+            required
+            placeholder="Nhập tài khoản"
+            value={formData.username}
+            onChange={handleChange}
+          />
+
           <label htmlFor="name">Họ và tên:</label>
           <input
             type="text"
             id="name"
-            name="name"
+            name="fullname"
             required
             placeholder="Nhập họ và tên"
-            value={formData.name}
+            value={formData.fullname}
             onChange={handleChange}
           />
 
@@ -100,11 +112,11 @@ function Register() {
           <label>Giới tính:</label>
           <div className="gender-options">
             <label className="gender-option">
-              <input type="radio" name="gender" value="male" onChange={handleChange} />
+              <input type="radio" name="gender" value="1" onChange={handleChange} checked/>
               <span className="custom-radio"></span> Nam
             </label>
             <label className="gender-option">
-              <input type="radio" name="gender" value="female" onChange={handleChange} />
+              <input type="radio" name="gender" value="0" onChange={handleChange} />
               <span className="custom-radio"></span> Nữ
             </label>
           </div>

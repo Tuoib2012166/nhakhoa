@@ -16,6 +16,7 @@ const AdminPage = () => {
           {/* Nội dung chính của trang */}
         </div>
       </div>
+      <AdminFooter />
     </div>
   );
 };

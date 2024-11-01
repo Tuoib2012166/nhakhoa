@@ -5,7 +5,7 @@ require('dotenv').config();
 const express = require('express');
 
 // Import thư viện mysql để kết nối với cơ sở dữ liệu MySQL
-const mysql = require('mysql');
+const mysql = require('mysql2/promise');
 
 // Import thư viện cors để cho phép các yêu cầu từ các nguồn khác nhau
 const cors = require('cors');
@@ -13,66 +13,202 @@ const cors = require('cors');
 // Import thư viện bcrypt để mã hóa mật khẩu
 const bcrypt = require('bcrypt');
 
+const jwt = require('jsonwebtoken');
+
+// Import thư viện cookie-parser để xử lý cookie
+const cookieParser = require('cookie-parser');
+
 // Tạo một instance của ứng dụng Express
 const app = express();
 
 // Cấu hình middleware để xử lý dữ liệu JSON trong các yêu cầu
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 
 // Tạo kết nối đến cơ sở dữ liệu MySQL
-const db = mysql.createConnection({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "",
-    database: process.env.DB_NAME || "nhakhoa"
-});
+
+let db = null;
+
+async function connectDatabase() {
+    db = await mysql.createConnection({
+        host: process.env.DB_HOST || "localhost",
+        user: process.env.DB_USER || "root",
+        port: process.env.DB_PORT || 3306,
+        password: process.env.DB_PASSWORD || "",
+        database: process.env.DB_NAME || "nhakhoa",
+        timezone: '+07:00'
+    });
+}
+
+connectDatabase();
+
+// Authentication middleware
+function authMiddleware(req, res, next) {
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).json({ message: "Chưa đăng nhập" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: "Chưa đăng nhập" });
+    }
+}
 
 // Định nghĩa route cho đăng nhập
-app.post('/login', (req, res) => {
-    const sql = "SELECT * FROM nguoidung WHERE SDT = ?";
+app.post('/login', async (req, res) => {
+    const selectUserSql = "SELECT * FROM users WHERE username = ?";
 
-    db.query(sql, [req.body.phone], (err, data) => {
-        if (err) return res.status(500).json("Error");
+    const [selectUserResult,] = await db.query(selectUserSql, [req.body.username]);
 
-        if (data.length > 0) {
-            const isValidPassword = bcrypt.compareSync(req.body.password, data[0].MatKhau);
-            if (isValidPassword) {
-                // Kiểm tra giá trị TaiKhoan
-                const taiKhoanValue = data[0].TaiKhoan;
-                if (taiKhoanValue === 2) {
-                    return res.status(200).json({ message: "Đăng nhập thành công", redirect: "/admin" });
-                } else if (taiKhoanValue === 1) {
-                    return res.status(200).json({ message: "Đăng nhập thành công", redirect: "/" });
-                }
-            } else {
-                return res.status(401).json("Mật khẩu không đúng");
+    if (selectUserResult.length > 0) {
+        const isValidPassword = bcrypt.compareSync(req.body.password, selectUserResult[0].password);
+        if (isValidPassword) {
+
+            // Sign token
+            const token = jwt.sign(
+                { id: selectUserResult[0].id, role: selectUserResult[0].role },
+                process.env.JWT_SECRET,
+                { expiresIn: +process.env.COOKIE_EXPIRE_IN }
+            );
+
+            res.cookie('token', token, {
+                httpOnly: false,
+                secure: false,
+                maxAge: process.env.COOKIE_EXPIRE_IN * 1000,
+                sameSite: 'lax'
+            });
+
+            res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+            if (selectUserResult[0].role === 'admin') {
+                return res.json({ message: "Đăng nhập thành công", redirect: "/admin" });
+            }
+
+            if (selectUserResult[0].role === 'doctor') {
+                return res.json({ message: "Đăng nhập thành công", redirect: "/doctor" });
+            }
+
+            if (selectUserResult[0].role === 'patient') {
+                return res.json({ message: "Đăng nhập thành công", redirect: "/" });
             }
         } else {
-            return res.status(401).json("Số điện thoại không tồn tại");
+            return res.json("Mật khẩu không đúng");
         }
-    });
+    } else {
+        return res.json("Username không tồn tại");
+    }
 });
 
 // Định nghĩa route cho đăng ký
-app.post('/register', (req, res) => {
-    const { name, phone, address, birthYear, password } = req.body;
+app.post('/register', async (req, res) => {
+    await db.query("START TRANSACTION");
+    try {
+        const { username, password, fullname, phone, address, birthYear, gender } = req.body;
 
-    const checkUserSql = "SELECT * FROM nguoidung WHERE SDT = ?";
-    db.query(checkUserSql, [phone], (err, data) => {
-        if (err) return res.json("Error");
+        const checkUserSql = "SELECT * FROM users WHERE username = ?";
 
-        if (data.length > 0) {
-            return res.json("Số điện thoại đã được đăng ký");
-        } else {
-            const hashedPassword = bcrypt.hashSync(password, 10);
-            const sql = "INSERT INTO nguoidung (Ten, SDT, DiaChi, NamSinh, MatKhau, TaiKhoan) VALUES (?, ?, ?, ?, ?, CURRENT_DATE, 1)";
-            db.query(sql, [name, phone, address, birthYear, hashedPassword], (err, result) => {
-                if (err) return res.json("Error");
-                return res.json("Đăng ký thành công");
+        const [rows,] = await db.execute(checkUserSql, [username]);
+
+        if (rows.length > 0) {
+            return res.json("Username đã tồn tại");
+        }
+
+        const hashedPassword = bcrypt.hashSync(password, 10);
+
+        const insertUserSql = "INSERT INTO users (username, password, role, status) VALUES (?, ?, 'patient', 1)";
+        const [insertUserResult,] = await db.execute(insertUserSql, [username, hashedPassword]);
+
+        const insertPatientSql = "INSERT INTO patients (user_id, fullname, phone, address, gender, birth_year) VALUES (?, ?, ?, ?, ?, ?)";
+        await db.execute(insertPatientSql, [insertUserResult.insertId, fullname, phone, address, gender, birthYear]);
+
+        await db.query("COMMIT");
+        return res.json("Đăng ký thành công");
+    } catch (error) {
+        console.log(error);
+        await db.query("ROLLBACK");
+        return res.json("Có lỗi xảy ra. Vui lòng thử lại");
+    }
+});
+
+app.get('/me', authMiddleware, async (req, res) => {
+    try {
+        const selectUserSql = "SELECT * FROM users WHERE id = ?";
+        const [selectUserResult,] = await db.query(selectUserSql, [req.user.id]);
+
+        if (selectUserResult.length === 0) {
+            return res.status(401).json({ message: "Chưa đăng nhập" });
+        }
+
+        const user = selectUserResult[0]; // without password
+        delete user.password;
+
+        if (selectUserResult[0].role === 'admin') {
+            return res.json({
+                user: selectUserResult[0],
+                profile: null
             });
         }
-    });
+
+        if (selectUserResult[0].role === 'doctor') {
+            const selectDoctorSql = "SELECT * FROM doctors WHERE user_id = ?";
+            const [selectDoctorResult,] = await db.query(selectDoctorSql, [req.user.id]);
+            return res.json({
+                user: selectUserResult[0],
+                profile: selectDoctorResult[0]
+            });
+        }
+
+        if (selectUserResult[0].role === 'patient') {
+            const selectPatientSql = "SELECT * FROM patients WHERE user_id = ?";
+            const [selectPatientResult,] = await db.query(selectPatientSql, [req.user.id]);
+            return res.json({
+                user: selectUserResult[0],
+                profile: selectPatientResult[0]
+            });
+        }
+    } catch (error) {
+        return res.status(401).json({ message: "Chưa đăng nhập" });
+    }
+});
+
+app.get('/doctors', async (req, res) => {
+    try {
+        const selectDoctorsSql = "SELECT * FROM doctors";
+        const [doctors,] = await db.query(selectDoctorsSql);
+
+        return res.json(doctors);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Có lỗi xảy ra. Vui lòng thử lại" });
+    }
+});
+
+app.post('/appointment', async (req, res) => {
+    await db.query("START TRANSACTION");
+    const { fullname, phone, address, gender, birthYear, message, appointmentDate, appointmentTime, doctor } = req.body;
+    try {
+        const insertPatientSql = 'INSERT INTO patients (fullname, phone, address, gender, birth_year) VALUES (?, ?, ?, ?, ?)';
+        const [insertPatientResult,] = await db.execute(insertPatientSql, [fullname, phone, address, gender, birthYear]);
+
+        const insertAppointmentSql = 'INSERT INTO appointments (patient_id, doctor_id, content, date, time) VALUES (?, ?, ?, ?, ?)';
+        await db.execute(insertAppointmentSql, [insertPatientResult.insertId, doctor, message, appointmentDate, appointmentTime]);
+
+        await db.query("COMMIT");
+        return res.status(200).json({ message: "Appointment created successfully" });
+    } catch (error) {
+        await db.query("ROLLBACK");
+        console.log(error);
+        return res.status(500).json({ message: "An error occurred while creating the appointment" });
+    }
 });
 
 // Khởi động server và lắng nghe các yêu cầu trên cổng 8080

@@ -1,5 +1,8 @@
 import '../../assets/css/login.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const GetForm = () => {
   const [formData, setFormData] = useState({
@@ -9,24 +12,59 @@ const GetForm = () => {
     gender: '',
     birthYear: '',
     message: '',
+    appointmentDate: '',
+    appointmentTime: '',
+    doctor: '',
   });
+
+  const [doctors, setDoctors] = useState([]);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/doctors');
+        setDoctors(response.data);
+        // toast.success('Doctors fetched successfully', { autoClose: 3000 });
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+      }
+    };
+
+    if (isFirstRender.current) {
+      fetchDoctors();
+      isFirstRender.current = false;
+    }
+  }, []); // Empty dependency array ensures this runs only once
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Gửi thành công: ${JSON.stringify(formData)}`);
-    setFormData({
-      name: '',
-      phone: '',
-      address: '',
-      gender: '',
-      birthYear: '',
-      message: '',
-    });
+    try {
+      const response = await axios.post('http://localhost:8080/appointment', formData);
+      if (response.status === 200) {
+        toast.success('Bạn đã đặt lịch khám thành công! Vui lòng tới trung tâm đúng ngày và giờ hẹn!', { autoClose: 3000 });
+        setFormData({
+          name: '',
+          phone: '',
+          address: '',
+          gender: '',
+          birthYear: '',
+          message: '',
+          appointmentDate: '',
+          appointmentTime: '',
+          doctor: '',
+        });
+      } else {
+        toast.error('Failed to submit form', { autoClose: 3000 });
+      }
+    } catch (error) {
+      toast.error('An error occurred while submitting the form', { autoClose: 3000 });
+    }
   };
 
   return (
@@ -34,13 +72,13 @@ const GetForm = () => {
       <h2>Đặt lịch ngay</h2>
       <div className="form-container">
         <form id="contactForm" onSubmit={handleSubmit}>
-          <label htmlFor="name">Họ và tên:</label>
+          <label htmlFor="fullname">Họ và tên:</label>
           <input
             type="text"
-            id="name"
-            name="name"
+            id="fullname"
+            name="fullname"
             required
-            value={formData.name}
+            value={formData.fullname}
             onChange={handleChange}
           />
 
@@ -71,9 +109,9 @@ const GetForm = () => {
                 <input
                   type="radio"
                   name="gender"
-                  value="male"
+                  value="1"
                   onChange={handleChange}
-                  checked={formData.gender === 'male'}
+                  checked={formData.gender === '1'}
                 />
                 <span className="custom-radio"></span> Nam
               </label>
@@ -81,9 +119,9 @@ const GetForm = () => {
                 <input
                   type="radio"
                   name="gender"
-                  value="female"
+                  value="0"
                   onChange={handleChange}
-                  checked={formData.gender === 'female'}
+                  checked={formData.gender === '0'}
                 />
                 <span className="custom-radio"></span> Nữ
               </label>
@@ -103,6 +141,42 @@ const GetForm = () => {
             max="2023"
             style={{ width: '200px' }} // Đảm bảo ô năm sinh không bị ảnh hưởng CSS
           />
+
+          <label htmlFor="appointmentDate">Ngày hẹn:</label>
+          <input
+            type="date"
+            id="appointmentDate"
+            name="appointmentDate"
+            required
+            value={formData.appointmentDate}
+            onChange={handleChange}
+          />
+
+          <label htmlFor="appointmentTime">Giờ hẹn:</label>
+          <input
+            type="time"
+            id="appointmentTime"
+            name="appointmentTime"
+            required
+            value={formData.appointmentTime}
+            onChange={handleChange}
+          />
+
+          <label htmlFor="doctor">Chọn bác sĩ:</label>
+          <select
+            id="doctor"
+            name="doctor"
+            required
+            value={formData.doctor}
+            onChange={handleChange}
+          >
+            <option value="">Chọn bác sĩ</option>
+            {doctors.map((doctor) => (
+              <option value={doctor.id} key={doctor.id}>
+                {doctor.fullname} - {doctor.specialty}
+              </option>
+            ))}
+          </select>
 
           <label htmlFor="message">Nội dung:</label>
           <textarea

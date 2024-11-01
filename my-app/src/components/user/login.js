@@ -14,12 +14,16 @@ function Login() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    axios.post('http://localhost:8080/login', { phone, password })
+    axios.post(
+      'http://localhost:8080/login',
+      { username: phone, password },
+      { withCredentials: true } // Gửi cookie kèm theo request
+    )
       .then(res => {
         if (res.status === 200) {
-          setMessage(res.data); // Hiển thị thông báo đăng nhập thành công
+          setMessage(res.data.message); // Hiển thị thông báo đăng nhập thành công
           setTimeout(() => {
-            navigate('/admin'); // Chuyển hướng đến trang admin sau 1 giây
+            navigate(res.data.redirect); // Chuyển hướng đến trang admin sau 1 giây
           }, 1000); // Thay đổi thời gian thành 1000ms
         }
       })
@@ -45,23 +49,22 @@ function Login() {
         </div>
         <h2>Đăng nhập</h2>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="phone">Số điện thoại:</label>
-          <input 
-            type="tel" 
-            id="phone" 
-            name="phone" 
-            pattern="[0-9]{10}" 
-            required 
-            onChange={e => setPhone(e.target.value)} 
+          <label htmlFor="username">Tài khoản:</label>
+          <input
+            type="tel"
+            id="username"
+            name="username"
+            required
+            onChange={e => setPhone(e.target.value)}
           />
 
           <label htmlFor="password">Mật khẩu:</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            required 
-            onChange={e => setPassword(e.target.value)} 
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            onChange={e => setPassword(e.target.value)}
           />
 
           <button type="submit">Đăng nhập</button>

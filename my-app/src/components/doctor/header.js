@@ -1,23 +1,18 @@
-// src/components/admin/AdminHeader.js
+// src/components/admin/DoctorHeader.js
 
 import React, { useState } from 'react';
 import { Navbar, Nav, Button, Form } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
+import useUserStore from '../../store/userStore';
 import '../../assets/css/admin/header.css'; // Đảm bảo đường dẫn đúng
 
-const AdminHeader = () => {
+const DoctorHeader = () => {
   const [showProfileForm, setShowProfileForm] = useState(false);
+  const userProfile = useUserStore((state) => state.user.profile);
+  const clearUser = useUserStore((state) => state.clearUser);
   const [, , removeCookie] = useCookies(['token']);
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    // Clear the cookie token using react-cookie
-    removeCookie('token', { path: '/' });
-
-    // Redirect to home page
-    navigate('/');
-  };
 
   const handleRefresh = () => {
     window.location.reload(); // Làm mới trang
@@ -25,6 +20,17 @@ const AdminHeader = () => {
 
   const toggleProfileForm = () => {
     setShowProfileForm(!showProfileForm); // Chuyển trạng thái hiển thị form
+  };
+
+  const handleLogout = () => {
+    // Clear the cookie token using react-cookie
+    removeCookie('token', { path: '/' });
+
+    // Clear user state
+    clearUser();
+
+    // Redirect to home page
+    navigate('/');
   };
 
   return (
@@ -41,7 +47,7 @@ const AdminHeader = () => {
           <i className="bi bi-arrow-clockwise"></i> {/* Icon Refresh */}
         </Button>
         <Button variant="outline-light" onClick={toggleProfileForm}>
-          <i className="bi bi-person-circle"></i> Profile {/* Icon Profile */}
+          <i className="bi bi-person-circle"></i> Hello, {userProfile?.fullname} {/* Icon Profile */}
         </Button>
       </Nav>
       {showProfileForm && (
@@ -68,4 +74,4 @@ const AdminHeader = () => {
   );
 };
 
-export default AdminHeader;
+export default DoctorHeader;
